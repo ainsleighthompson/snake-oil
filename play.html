@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snake oil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+    <header>
+        <a href="index.html"><img src="images/1 font.webp" alt="Snake Oil"></a>
+    </header>
+
+<body class="play">
+
+        <div id="rotateNotice" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  color:#4E95D9;
+  font-family:'Edwardian Script ITC', cursive;
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+">
+  <div style="background:#A6CAEC; padding:30px; border-radius:20px;">
+    <p>Please rotate your phone to landscape</p>
+  </div>
+</div>
+
+        <div class="button-section play">
+
+                <button class="icon-button" onclick="document.getElementById('popup').style.display='block'">
+        <img src="images/white flower.png" alt="How to Play">
+        <span>How to Play</span>
+</button>
+
+</div>
+
+<main>
+    <div id="popup" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+  <div style="background:#A6CAEC; color: #38393b; font-family:'Edwardian Script ITC', cursive; padding:30px; margin:5vh auto; width:90%; max-width: 800px; max-height: 90vh; overflow-y:auto; border-radius: 20px; position: relative;">
+    <img src="images/how to play.webp" alt="how to play"> <br>
+    <p> Make sure each player has their own device to access this page.<br>
+    2. The player furthest away from basking in the sun is now the "Customer" and the rest are now "Sellers" for the round.<br>
+    3. On the screen, each player will select their associating role.<br>
+    4. The Customer will then announce their profession to the group (given on the screen.)<br>
+    5. Each seller then combines two word cards from their hand to create an item for the customer.<br>
+    6. As soon as any seller is ready, that seller pitches their item to the customer of the round.
+    --> The customer may cut off any pitch that goes over 30 seconds.<br>
+    7. After each seller has made a pitch, the Customer picks the best item and that seller wins the round.<br>
+    8. Play continues to the left of the starting customer.</p>
+    <button onclick="document.getElementById('popup').style.display='none'"
+        style="position:absolute; top:10px; left:15px; background:none; border:none;
+               font-size:24px; color:#4E95D9; cursor:pointer;">
+  ×
+</button>
+
+  </div>
+</div>
+
+</main>
+
+<div class="role-selection">
+  <div class="role-item">
+    <img src="images/oil.png"
+     alt="Customer"
+     class="role-btn"
+     onclick="openCustomerPopup()">
+    <span>Customer</span>
+  </div>
+
+  <div class="role-item">
+    <img src="images/hat.png"
+     alt="Seller"
+     class="role-btn"
+     onclick="openSellerPopup()">
+    <span>Seller</span>
+  </div>
+</div>
+
+
+<!-- Customer Popup -->
+<div id="customerPopup" class="popup">
+  <div class="popup-content customer-layout">
+    <button class="close-btn" onclick="document.getElementById('customerPopup').style.display='none'">×</button>
+    <div class="customer-left">
+    <p>For this round, you will be the <strong>Customer</strong>. Your Customer card is shown here. If you like this customer, announce it to the group and take on this persona for the round. If you do not like this customer, click "New Customer."</p>
+  
+    <button class="regen-btn" onclick="generateCustomerCard()">
+        New Customer
+    </button>
+    </div>
+    <div class="customer-right">
+        <img id="customerImage" src="" alt="Customer Card">
+        <h3 id="customerTitle"></h3>
+    </div>
+
+</div>
+</div>
+
+<!-- Seller Popup -->
+<div id="sellerPopup" class="popup">
+  <div class="popup-content seller-layout">
+    <button class="close-btn"
+      onclick="document.getElementById('sellerPopup').style.display='none'">×</button>
+
+    <!-- Left side: instructions -->
+    <div class="seller-left">
+    <p>For this round, you will be a <strong>Seller</strong>. Your hand of six random Word Cards is shown here. Combine two words to make a product or service that you will sell to this round's Customer.</p>
+    </div>
+
+    <!-- Right side: word bank -->
+    <div class="seller-right">
+      <div id="wordBank" class="word-bank"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const words = [
+  "Quantum", "Pickle", "Luxury", "Wireless", "Emotional",
+  "Portable", "Invisible", "Organic", "Turbo", "Antique",
+  "Glow", "Mood", "Pocket", "Deluxe", "Cosmic", "Crunchy",
+  "Kibble","Teeth","Sonic","Magic","Eco-friendly","Crunch",
+  "Earwax","Freckled","Galactic","Holographic","Jellybean",
+  "Butter","Hat","Boot","Goblet","Rocket","Slippers",
+  "Umbrella","Vortex","Waffles","Zebra","Nimbus","Pixel","Tea",
+  "Candle","Tuberculosis","Paw","Feather-light","Packable","Fatty","Slimmer",
+  "Swollen","De-","Rice","Hyper-","Mega-","Nano-","Super-","Lego","Chai",
+  "Chicken", "Slimy","Crusty","Fizzy","Bubbly","Spicy","Soggy","Crispy",
+  "Chokeing","Dizzy","Funky","Grimy","Itchy","Jumpy","Loopy",
+  "Gorging","Mushy","Nerdy","Puking","Quirky","Raging","Screaming",
+  "Chopping","Clinging","Cleaning","Dancing","Droning","Flying","Glowing",
+    "Hopping","Juggling","Kicking","Leaping","Munching","Napping","Prancing",
+    "Pot-pie","Meat","Salad","Soup","Stew","Sushi","Taco","Wings","Bulbous",
+    "Sword","Shield","Helmet","Armor","Boots","Gauntlets","Bow","Arrow",
+    "Hammer","Axe","Spear","Dagger","Mace","Flail","Crossbow",
+    "Dragon","Elf","Goblin","Orc","Troll","Wizard","Knight","Giant",
+    "Golden","Silver","Bronze","Crystal","Diamond","Ruby","Emerald","Sapphire",
+    "Quantumized","Neural","AI-Powered","Blockchain","Photon","Plasma",
+    "Laser","Nano-Enhanced","Cyber","Digital","Virtual","Augmented",
+    "Hypersonic","Zero-Latency","Cloud-Based","Electro","Magnetized",
+    "Biometric","Algorithmic","Encrypted","Autonomous","Synthetic","Fusion",
+    "Enchanted","Cursed","Blessed","Runic","Arcane","Mythic","Ancient",
+"Fabled","Legendary","Ethereal","Spectral","Draconic","Elven-Made",
+"Dwarven","Necrotic","Holy","Chaotic","Mystical","Astral","Void-Touched",
+"Mana","Spellbound","Hexed","Warding","Summoned","Forged","Blessed",
+"Chewy","Gooey","Buttery","Savory","Sugary","Salty","Greasy","Fluffy",
+"Toasted","Fermented","Smoky","Charred","Creamy","Chunky","Gritty",
+"Juicy","Pickled","Marinated","Glazed","Icy","Melty","Overcooked",
+"Undercooked","Microwaved","Deep-Fried","Grilled","Baked","Steamed","Roasted",
+"Moist","Oozing","Crumbly","Flaky","Sweaty","Sticky","Slimed",
+"Crusted","Peeling","Squishy","Bristly","Slick","Gravelly","Scaly",
+"Bloated","Rancid","Musty","Clammy","Wrinkled","Fuzzy","Itchy-Again",
+"Regrettable","Questionable","Mysterious","Unidentifiable","Exotic","Rare",
+"Forbidden","Legendary","Mythical","Epic","Unique","One-of-a-Kind",
+"Custom-Made","Handcrafted","Artisanal","Boutique","Limited-Edition",
+"Anxious","Confident","Unhinged","Polite","Passive-Aggressive",
+"Overstimulated","Sleep-Deprived","Caffeinated","Paranoid","Joyful",
+"Moody","Petty","Dramatic","Wholesome","Ferocious","Awkward",
+"Melancholy","Chaotic-Good","Unbothered","Frazzled","Queen","King",
+"Guru","Ninja","Wizard","Samurai","Viking","Pirate","Detective",
+"Dinosaur","Spoon","Ladle","Doorknob","Pillow","Blanket","Teapot","Remote",
+"Flashlight","Tupperware","Notebook","Backpack","Shoelace","Broom",
+"Thermos","Stapler","Paperclip","Clipboard","Cushion","Curtain","Clock",
+"Teddy","Ultra-","Proto-","Post-","Pre-","Anti-","Pseudo-","Neo-","Meta-",
+"Bio-","Cryo-","Astro-","Techno-","Pseudo-Organic","Hyper-Reactive",
+"Raccoon","Possum","Gecko","Axolotl","Frog","Pigeon","Moth","Ferret",
+"Badger","Otter","Snail","Slug","Beetle","Crab","Shrimp","Lizard",
+"Goose","Weasel","Toad","Crow","Mantis","Opulent","Artisanal","Hand-Crafted","Limited-Edition","Prestige",
+"Collector’s","Bespoke","Premium","Gold-Plated","Velvet-Lined",
+"Exclusive","Certified","Curated","Estate-Grade","Museum-Quality",
+"Diamond-Encrusted","Platinum","Solid-Gold","Royal","Imperial",
+"Majestic","Regal","Noble","Sovereign","Monarchial","Exalted","Illustrious",
+"Resplendent","Stately","Grandiose","Lavish","Sumptuous","Magnificent",
+"Clam","Fine China","Silk","Cashmere","Marble","Mahogany","Crystal-Clear",
+"Plush","Gilded","Embroidered","Bejeweled","Ornate","Intricate","Luxurious",
+"Opulent","Extravagant","Decadent","Palatial","Baroque","Rococo",
+"Victorian","Edwardian","Art Deco","Mid-Century","Contemporary","Modern",
+"Futuristic","Cutting-Edge","State-of-the-Art","Next-Gen","Revolutionary","Groundbreaking",
+"Cow", "Banana","Sock", "Toe Jamming","Bubblegum","Doughnut","Marshmallow",
+"Cupcake","Sprinkles","Whipped Cream","Caramel","Chocolate","Vanilla",
+"Airmpit", "Bacon","Broccoli","Cabbage","Dumpling","Eggroll","Fondue",
+"Toenail","Gingerbread","Hummus","Ketchup","Lollipop","Meatball",
+"Fungus", "Rash", "Booger", "Mucus", "Snot", "Phlegm", "Pus", "Scab",
+"Plague","Infection","Virus","Bacteria","Germ","Contagion","Pathogen",
+"Rat","Cheese", "Fromage","de Pied","Worm","Cyst","Ulcer","Blister","Callus",
+"Mustache","Cornocopia","Daggar", "Ketchup", "Warthog","Deviled Egg","Toothpaste",
+"Lamp","Leg","Table","Chair","Sofa","Desk","Shelf","Cabinet","Couch",
+"Curtain","Vase","Mirror","Rug","Chandelier","Clock","Fan",
+"Painting","Statue", "Trap","Bait","Net","Lure","Hook","Line","Sinker",
+"Compass","Map","Gloves","Scarf","Boots","Jacket","Helmet","Goggles",
+"Backpack","Rope","Lantern","Axe","Shovel","Pickaxe","Flint","Tinderbox","Canteen","Binoculars",
+"Tylonol", "Rub", "Earthy","Anti", "Vaccination"
+
+];
+
+function openSellerPopup() {
+  const bank = document.getElementById("wordBank");
+  bank.innerHTML = "";
+
+  // Shuffle words
+  const shuffled = [...words].sort(() => 0.5 - Math.random());
+
+  // Take first 6
+  shuffled.slice(0, 6).forEach(word => {
+    const span = document.createElement("span");
+    span.textContent = word;
+    bank.appendChild(span);
+  });
+
+  document.getElementById("sellerPopup").style.display = "flex";
+}
+
+</script>
+
+<script>
+const customerCards = [
+  {
+    title: "Patrick Amos",
+    image: "images/pat.png"
+  },
+  {
+    title: "Joe Griffin",
+    image: "images/joe griffin.jpg"
+  },
+  {
+    title: "Martha Stewart",
+    image: "images/martha.jpeg"
+  },
+  {
+    title: "Vladimir Putin",
+    image: "images/vlad.jpeg"
+  },
+  {
+    title: "Medival Peasant",
+    image: "images/Peasant.jpeg"
+  },
+{
+    title: "Stalin",
+    image: "images/Stalin.jpeg"
+  },
+    {
+    title: "Pooh Bear",
+    image: "images/pooh.jpeg"
+  },
+    {
+    title: "Hercule Poirot",
+    image: "images/poirot.jpeg"
+  },
+    {
+    title: "Bilbo Baggins",
+    image: "images/bilbo.jpeg"
+  },
+    {
+    title: "Sherlock Holmes",
+    image: "images/sherlock.jpeg"
+  },
+  {
+    title: "Emmanuel Macron",
+    image: "images/Macron.jpg"
+  },
+  {
+    title: "Cowboy",
+    image: "images/cowboy.jpeg"
+  },
+  {
+    title: "A Worm",
+    image: "images/worm.jpg"
+  },
+  {
+    title: "A Fisherman",
+    image: "images/fisherman.jpg"
+  },
+  {
+    title: "A Family Man",
+    image: "images/familyman.jpg"
+  },
+  {
+    title: "Marilyn Monroe",
+    image: "images/marilyn.jpg"
+  },
+  {
+    title: "An Italian Man",
+    image: "images/italian.jpg"
+  },
+  {
+    title: "A Scotland Yard Hound",
+    image: "images/hound.jpg"
+  },
+  {
+    title: "A Bootlegger",
+    image: "images/boolegger.jpg"
+  },
+  {
+    title: "A Ford Man",
+    image: "images/ford.jpg"
+  },
+  {
+    title: "A Dodge Man",
+    image: "images/dodge.jpg"
+  },
+  {
+    title: "A Waitress",
+    image: "images/waitress.jpg"
+  },
+  {
+    title: "A Teacher",
+    image: "images/teacher.jpg"
+  },
+  {
+    title: "A Walmart Juggernaut",
+    image: "images/juggernaut.jpg"
+  },
+  {
+    title: "Shrek",
+    image: "images/shrek.jpg"
+  },
+  {
+    title: "Dobby",
+    image: "images/dobbby.jpg"
+  },
+  {
+    title: "Plumber",
+    image: "images/plumber.jpg"
+  },
+];
+</script>
+
+<script>
+function generateCustomerCard() {
+  const randomCard =
+    customerCards[Math.floor(Math.random() * customerCards.length)];
+
+  document.getElementById("customerImage").src = randomCard.image;
+  document.getElementById("customerTitle").textContent = randomCard.title;
+}
+
+// When Customer icon is clicked
+function openCustomerPopup() {
+  generateCustomerCard();
+  document.getElementById("customerPopup").style.display = "flex";
+}
+</script>
+
+</body>
+</html>

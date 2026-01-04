@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snake oil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+    <header>
+        <img src="images/1 font.webp" alt="Snake Oil">
+    </header>
+
+<body class="home">
+
+    <div id="rotateNotice" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  color:#4E95D9;
+  font-family:'Edwardian Script ITC', cursive;
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+">
+  <div style="background:#A6CAEC; padding:30px; border-radius:20px;">
+    <p>Please rotate your phone to landscape</p>
+  </div>
+</div>
+
+
+        <div class="button-section home">
+
+                <button class="icon-button"
+        onclick="document.getElementById('popup').style.display='block'">
+        <img src="images/white flower.png" alt="How to Play">
+        <span>How to Play</span>
+</button>
+
+<button class="icon-button">
+    <a href="play.html"> <img src="images/black flower.png" alt="Play">
+    <span>Play</span> </a>
+</button>
+
+</div>
+
+    <main>
+
+<div id="popup" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);">
+  <div style="background:#A6CAEC; color: #38393b; font-family:'Edwardian Script ITC', cursive; padding:30px; margin:5vh auto; width:90%; max-width: 800px; max-height: 90vh; overflow-y:auto; border-radius: 20px; position: relative;">
+    <img src="images/how to play.webp" alt="how to play"> <br>
+    <p> Make sure each player has their own device to access this page.<br>
+    2. The player furthest away from basking in the sun is now the "Customer" and the rest are now "Sellers" for the round.<br>
+    3. On the screen, each player will select their associating role.<br>
+    4. The Customer will then announce their profession to the group (given on the screen.)<br>
+    5. Each seller then combines two word cards from their hand to create an item for the customer.<br>
+    6. As soon as any seller is ready, that seller pitches their item to the customer of the round.
+    --> The customer may cut off any pitch that goes over 30 seconds.<br>
+    7. After each seller has made a pitch, the Customer picks the best item and that seller wins the round.<br>
+    8. Play continues to the left of the starting customer.</p>
+    <button onclick="document.getElementById('popup').style.display='none'"
+        style="position:absolute; top:10px; left:15px; background:none; border:none;
+               font-size:24px; color:#4E95D9; cursor:pointer;">
+  ×
+</button>
+
+  </div>
+</div>
+
+    </main>
+
+    <script>
+function checkOrientation() {
+  const notice = document.getElementById("rotateNotice");
+  if (window.innerHeight > window.innerWidth) {
+    notice.style.display = "flex";
+  } else {
+    notice.style.display = "none";
+  }
+}
+
+window.addEventListener("load", checkOrientation);
+window.addEventListener("resize", checkOrientation);
+</script>
+
+</body>
+</html>
